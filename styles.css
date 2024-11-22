@@ -1,13 +1,12 @@
-/*  your css code here. If applicable */
-
 body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #000;
+    background-color: #121212;
     font-family: Arial, sans-serif;
+    color: #fff;
 }
 
 #app {
@@ -17,7 +16,6 @@ body {
 }
 
 .vid-container {
-    position: relative;
     width: 100%;
     height: 300px;
     overflow: hidden;
@@ -31,7 +29,7 @@ body {
 
 .player-container {
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.1);
     padding: 20px;
     border-radius: 10px;
     margin-top: -50px;
@@ -39,7 +37,14 @@ body {
     z-index: 2;
 }
 
-.sound-picker button, .time-select button, .play {
+.time-display {
+    font-size: 2em;
+    margin: 15px 0;
+}
+
+.sound-picker button,
+.time-select button,
+.play {
     margin: 5px;
     padding: 10px 20px;
     border: none;
@@ -58,7 +63,6 @@ body {
     background-color: #FF5722;
 }
 
-.time-display {
-    font-size: 2em;
-    margin: 15px 0;
+.sound-picker {
+    margin-top: 10px;
 }
