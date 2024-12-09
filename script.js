@@ -1,75 +1,83 @@
-//your JS code here. If required.
+const videoElement = document.querySelector(".meditation-video");
+const audioElement = document.querySelector(".meditation-audio");
+const playButton = document.querySelector(".play");
+const timeDisplay = document.querySelector(".time-display");
+const app = document.querySelector(".app");
 
-document.addEventListener("DOMContentLoaded", () => {
-    const video = document.querySelector('.video');
-    const soundPickerButtons = document.querySelectorAll('.sound-picker button');
-    const playButton = document.querySelector('.play');
-    const timeDisplay = document.querySelector('.time-display');
-    const timeSelectButtons = document.querySelectorAll('.time-select button');
-    let audio = new Audio('Sounds/beach.mp3');
-    let duration = 600; // Default duration: 10 minutes
-    let timer;
+let duration = 600; // default 10 minutes
+let isPlaying = false;
+let timer;
 
-    // Play/Pause functionality
-    playButton.addEventListener('click', () => {
-        if (audio.paused) {
-            audio.play();
-            video.play();
-            playButton.textContent = "Pause";
-            startTimer();
-        } else {
-            audio.pause();
-            video.pause();
-            playButton.textContent = "Play";
+const setTimer = (seconds) => {
+    let remainingTime = seconds;
+    clearInterval(timer);
+
+    timer = setInterval(() => {
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
+        timeDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+        if (remainingTime <= 0) {
             clearInterval(timer);
+            videoElement.pause();
+            audioElement.pause();
+            playButton.textContent = "Play";
+            isPlaying = false;
         }
-    });
 
-    // Sound and video switch functionality
-    soundPickerButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            clearInterval(timer);
-            audio.pause();
-            video.pause();
-            playButton.textContent = "Play";
-            audio.src = button.getAttribute('data-sound');
-            video.src = button.getAttribute('data-video');
-            audio.currentTime = 0;
-            video.currentTime = 0;
-        });
-    });
+        remainingTime--;
+    }, 1000);
+};
 
-    // Timer selection functionality
-    timeSelectButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            duration = parseInt(button.getAttribute('data-time'));
-            updateTimeDisplay(duration);
-            clearInterval(timer);
-            audio.pause();
-            video.pause();
-            playButton.textContent = "Play";
-        });
-    });
-
-    function startTimer() {
-        let currentTime = duration;
-        updateTimeDisplay(currentTime);
-
-        timer = setInterval(() => {
-            currentTime--;
-            updateTimeDisplay(currentTime);
-            if (currentTime <= 0) {
-                clearInterval(timer);
-                audio.pause();
-                video.pause();
-                playButton.textContent = "Play";
-            }
-        }, 1000);
+const togglePlay = () => {
+    if (isPlaying) {
+        videoElement.pause();
+        audioElement.pause();
+        clearInterval(timer);
+        playButton.textContent = "Play";
+    } else {
+        videoElement.play();
+        audioElement.play();
+        setTimer(duration);
+        playButton.textContent = "Pause";
     }
+    isPlaying = !isPlaying;
+};
 
-    function updateTimeDisplay(time) {
-        const minutes = Math.floor(time / 60);
-        const seconds = time % 60;
-        timeDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    }
+// Set up event listeners for time selection
+document.getElementById("smaller-mins").addEventListener("click", () => {
+    duration = 120;
+    timeDisplay.textContent = "2:0";
+    clearInterval(timer);
 });
+
+document.getElementById("medium-mins").addEventListener("click", () => {
+    duration = 300;
+    timeDisplay.textContent = "5:0";
+    clearInterval(timer);
+});
+
+document.getElementById("long-mins").addEventListener("click", () => {
+    duration = 600;
+    timeDisplay.textContent = "10:0";
+    clearInterval(timer);
+});
+
+// Sound switch functionality
+document.getElementById("beach-btn").addEventListener("click", () => {
+    clearInterval(timer);
+    togglePlay()
+    videoElement.src = "video/beach.mp4";
+    audioElement.src = "sounds/beach.mp3";
+});
+
+document.getElementById("rain-btn").addEventListener("click", () => {
+    clearInterval(timer);
+    togglePlay()
+    
+    videoElement.src = "video/rain.mp4";
+    audioElement.src = "sounds/rain.mp3";
+});
+
+// Play/Pause button
+playButton.addEventListener("click", togglePlay);
